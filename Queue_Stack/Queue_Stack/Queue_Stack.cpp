@@ -70,9 +70,50 @@ class Queue
 };
 
 
+class Stack
+{
+	private:
+		Node* Top = NULL;
+	public:
+		bool IsEmpty()
+		{
+			return Top == NULL;
+		}
+		void Push(int val)
+		{
+			Node* NewNode = new Node;
+			NewNode->Value = val;
+			NewNode->Next = Top;
+			Top = NewNode;
+		}
+		int Pop()
+		{
+			if (IsEmpty())
+				return NULL;
+			int val = Top->Value;
+			Top = Top->Next;
+			return val;
+		}
+		int TopValue()
+		{
+			if (IsEmpty())
+				return NULL;
+			return Top->Value;
+		}
+		void PrintStack()
+		{
+			Node* temp = Top;
+			while (temp != NULL)
+			{
+				cout << temp->Value << " ";
+				temp = temp->Next;
+			}
+		}
+};
+
 int main()
 {
-    cout << "Start!\n";
+    cout << "QUEUE!\n";
 	cout << endl << "---------------------------------" << endl;
 	Queue* q = new Queue;
 	q->Enqueue(1);
@@ -86,5 +127,21 @@ int main()
 	cout << endl << "---------------------------------" << endl;
 	q->PrintQueue();
 	cout << endl << "---------------------------------" << endl;
-    cout << "End!\n";
+    
+
+
+	cout << "STACK!\n";
+	cout << endl << "---------------------------------" << endl;
+	Stack* s = new Stack;
+	s->Push(1);
+	s->Push(2);
+	s->Push(3);
+	s->PrintStack();
+	int pop = s->Pop();
+	cout << endl << "---------------------------------" << endl;
+	cout << pop;
+	cout << endl << "---------------------------------" << endl;
+	s->PrintStack();
+	cout << endl << "---------------------------------" << endl;
+	
 }
