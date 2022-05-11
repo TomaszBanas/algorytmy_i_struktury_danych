@@ -45,7 +45,9 @@ class Queue
 			}
 
 			int val = Front->Value;
+			Node* front = Front;
 			Front = Front->Next;
+			delete front;
 			return val;
 		}
 
@@ -91,7 +93,9 @@ class Stack
 			if (IsEmpty())
 				return NULL;
 			int val = Top->Value;
+			Node* top = Top;
 			Top = Top->Next;
+			delete top;
 			return val;
 		}
 		int TopValue()
