@@ -1,0 +1,225 @@
+// merge_sort.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include "iostream"
+#include <random>
+
+using namespace std;
+
+struct Node
+{
+	int Val;
+	Node* Next;
+};
+
+
+int Count(Node* H)
+{
+	int count = 0;
+	while (H != NULL)
+	{
+		count++;
+		H = H->Next;
+	}
+	return count;
+}
+
+int FindIndex(Node* H, int val, int current = 0)
+{
+	if (H == NULL)
+		return -1;
+
+	if (H->Val == val)
+		return current;
+
+	return FindIndex(H->Next, val, current + 1);
+}
+
+Node* GetByIndex(Node* H, int index)
+{
+	int i = 0;
+	Node* p = H;
+	while (p != NULL && i < index)
+	{
+		if (i == (index - 1))
+			return p;
+		p = p->Next;
+		i++;
+	}
+}
+
+
+void Split(Node*& H, Node*& H1, Node*& H2)
+{
+	H1 = H;
+
+	if (H != NULL && H->Next != NULL)
+	{
+		int count = Count(H);
+		Node* p = GetByIndex(H, count / 2);
+		H2 = p->Next;
+		p->Next = NULL;
+	}
+	H = NULL;
+}
+
+void Merge(Node*& H1, Node*& H2, Node*& H)
+{
+	if (H1 == NULL && H2 != NULL)
+	{
+		H = H2;
+		H2 = NULL;
+		return;
+	}
+	if (H1 != NULL && H2 == NULL)
+	{
+		H = H1;
+		H1 = NULL;
+		return;
+	}
+	if (H1 == NULL && H2 == NULL)
+		return;
+
+	Node* p = NULL;
+	Node* T = NULL;
+	while (H1 != NULL && H2 != NULL)
+	{
+		if (H1->Val < H2->Val)
+		{
+			p = H1;
+			H1 = H1->Next;
+		}
+		else {
+			p = H2;
+			H2 = H2->Next;
+		}
+		if (H == NULL)
+		{
+			H = p;
+			T = p;
+		}
+		else {
+			T->Next = p;
+			T = p;
+		}
+	}
+	if (H1 != NULL)
+		T->Next = H1;
+
+	if (H2 != NULL)
+		T->Next = H2;
+}
+
+void Add(Node*& h, int x)
+{
+	Node* p = new Node;
+	p->Val = x;
+	p->Next = h;
+	h = p;
+}
+
+Node* MergeSort(Node* H)
+{
+	if (H == NULL)
+		return NULL;
+
+	if (H->Next == NULL)
+		return H;
+	
+	Node* s1 = NULL;
+	Node* s2 = NULL;
+	Split(H, s1, s2);
+	Node* sorted1 = MergeSort(s1);
+	Node* sorted2 = MergeSort(s2);
+	Node* result = NULL;
+	Merge(sorted1, sorted2, result);
+	return result;
+}
+
+
+void PrintList(Node* H)
+{
+	if (H == NULL)
+	{
+		cout << endl;
+		return;
+	}
+
+	cout << H->Val << ", ";
+	PrintList(H->Next);
+}
+
+void PrintArray(int* arr, int size)
+{
+	cout << "[";
+	for (int i = 0; i < size; i++)
+	{
+		cout << arr[i] << ", ";
+	}
+	cout << "]" << endl;
+}
+
+
+void Heapify(int* arr, int heap_size, int i)
+{
+	int L = 2 * i;
+	int R = L + 1;
+	int largest = i;
+	if (L <= heap_size && arr[L] > arr[largest])
+		largest = L;
+
+	if (R <= heap_size && arr[R] > arr[largest])
+		largest = R;
+
+	if (largest != i)
+	{
+		swap(arr[i], arr[largest]);
+		Heapify(arr, heap_size, largest);
+	}
+}
+void BuildHeapify(int* arr, int heap_size)
+{
+	for (int i = heap_size / 2; i > 0; i--)
+		Heapify(arr, heap_size, i);
+}
+
+void HeapSort(int* arr, int size)
+{	
+	int heapsize = size-1;
+	BuildHeapify(arr, heapsize);
+	while (heapsize > 1)
+	{
+		swap(arr[1], arr[heapsize]);
+		heapsize--;
+		Heapify(arr, heapsize, 1);
+	}
+}
+
+int main()
+{
+	/*Node* H = NULL;
+
+	Add(H, 22);
+	Add(H, 18);
+	Add(H, 3);
+	Add(H, 16);
+	Add(H, 7);
+	Add(H, 6);
+	Add(H, 5);
+
+	PrintList(H);
+	Node* sorted = MergeSort(H);
+	PrintList(sorted);*/
+
+	int* arr = new int[10]{ -1, 20, -10, 6, -6, 3, 15, 8, 9, 30 };
+	
+	PrintArray(arr, 10);
+	HeapSort(arr, 10);
+	PrintArray(arr, 10);
+
+	system("pause");
+	
+    return 0;
+}
+
