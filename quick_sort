@@ -1,0 +1,138 @@
+// ConsoleApplication1.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include "iostream"
+
+using namespace std;
+
+int Gap(int gap)
+{
+	int tmpGap = gap / 1.3;
+
+	if(tmpGap == 9 || tmpGap == 10)
+		return 11;
+
+	if(tmpGap < 1)
+		return 1;
+
+	return tmpGap;
+}
+
+void BubbleSort(int arr[], int n)
+{
+	int i, j;
+	bool swapped;
+	for (i = 0; i < n - 1; i++)
+	{
+		swapped = false;
+		for (j = 0; j < n - i - 1; j++)
+		{
+			if (arr[j] > arr[j + 1])
+			{
+				swap(arr[j], arr[j + 1]);
+				swapped = true;
+			}
+		}
+
+		// IF no two elements were swapped
+		// by inner loop, then break
+		if (swapped == false)
+			break;
+	}
+}
+
+void bubble_sort(int arr[], int l, int r)
+{
+	int i, j;
+	bool swapped;
+	for (i = l; i < l+r; i++)
+	{
+		swapped = false;
+		for (j = l; j < l + r - i; j++)
+		{
+			if (arr[j] > arr[j + 1])
+			{
+				swap(arr[j], arr[j + 1]);
+				swapped = true;
+			}
+		}
+
+		if (swapped == false)
+			break;
+	}
+}
+
+
+int partition_Lomuto(int t[], int l, int r) {
+	int x = t[r]; // podzia ł wzgl ę dem prawego elementu
+	int i = l - 1;
+	for (int j = l;j < r; j++)
+		if (t[j] < x) { i++; swap(t[i], t[j]); }
+	swap(t[i + 1], t[r]);
+	return i + 1;
+}
+void quick_sort(int t[], int l, int r) {
+	if (l >= r) return;
+	int p = partition_Lomuto(t, l, r); // Hoare ’s , Lomuto
+	quick_sort(t, l, p - 1);
+	quick_sort(t, p + 1, r);
+}
+
+void quick_sort_hybrid(int* t, int l, int r) {
+	if (l >= r) return;
+	if (r - l >= 10)
+	{
+		int p = partition_Lomuto(t, l, r); // Hoare ’s , Lomuto
+		quick_sort(t, l, p - 1);
+		quick_sort(t, p + 1, r);
+	}
+	else {
+		bubble_sort(t, l, r);
+		//BubbleSort(t, n);
+	}
+}
+
+void CombSort(int* arr, int size)
+{
+	int gap = Gap(size);
+	while (gap > 1)
+	{
+		for (int i = 0; i < size - gap; i++)
+		{
+			if(arr[i+gap] < arr[i])
+				swap(arr[i + gap], arr[i]);
+		}
+		gap = Gap(gap);
+	}
+	BubbleSort(arr, size);
+}
+
+void PrintArray(int arr[], int size)
+{
+	int i;
+	for (i = 0; i < size; i++)
+		cout << arr[i] << ", ";
+	cout << endl;
+}
+
+int main()
+{
+	int N = 100;
+	int* arr = new int[N];
+	for (int i = 0; i < N; i++)
+	{
+		arr[i] = N-i;
+	}
+
+	//int* arr = new int[8]{8, 1, 6, -5, 33, -16, 25, 7};
+	PrintArray(arr, N);
+	//CombSort(arr, 8);
+	//quick_sort(arr, 0, N-1);
+	quick_sort_hybrid(arr, 0, N - 1);
+	//bubble_sort(arr, 10, 20);
+	PrintArray(arr, N);
+	system("pause");
+    return 0;
+}
+
