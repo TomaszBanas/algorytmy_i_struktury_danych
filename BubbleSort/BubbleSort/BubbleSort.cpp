@@ -52,8 +52,7 @@ void AddSorted(Node*& H, int val)
 		q->Val = val;
 		q->Next = p->Next;
 		p->Next = q;
-	}
-		
+	}	
 }
 
 void Swap(Node*& H)
